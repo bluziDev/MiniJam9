@@ -29,10 +29,40 @@
 jumpSp=4
 accSp=0.2
 maxFallSp=4
-hsp=walkSp
+if room==rm_game{
+    hsp=walkSp
+}
+else{
+    hsp=0
+}
 vsp=0
 
 cameraDis=112
+
+view_xview[0]=0
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>room_goto(rm_game)
 </string>
           </argument>
         </arguments>
@@ -70,7 +100,12 @@ if vsp&gt;maxFallSp{
     vsp=maxFallSp
 }
 
-
+if room==rm_game{
+    hsp=walkSp
+}
+else{
+    hsp=0
+}
 
 //movement/collisions
 hInc=(accSp*sign(hsp))
@@ -103,7 +138,25 @@ for(var i=0;i&lt;spMax;i+=accSp){
 floorX=floor(x)
 floorY=floor(y)
 
-view_xview[0]=floorX-cameraDis
+if room==rm_game and x&gt;cameraDis{
+    view_xview[0]=floorX-cameraDis
+}
+
+if place_meeting(floorX,floorY,obj_play){
+    alarm[0]=room_speed*0.5
+    with obj_play{
+        instance_destroy()
+    }
+}
+
+if place_meeting(floorX,floorY,obj_spikeball) or floorY&gt;=room_height{
+    room_restart()
+}   
+
+if place_meeting(floorX,floorY,obj_goal){
+    game_restart()
+} 
+
 </string>
           </argument>
         </arguments>
