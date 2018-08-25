@@ -27,7 +27,8 @@
             <kind>1</kind>
             <string>walkSp=2
 jumpSp=4
-accSp=0.2
+permAcc=0.2
+accSp=permAcc
 maxFallSp=4
 if room==rm_game{
     hsp=walkSp
@@ -40,6 +41,34 @@ vsp=0
 cameraDis=112
 
 view_xview[0]=0
+
+dashing=false
+
+dashTime=room_speed*0.5
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>dashing=false
+accSp=permAcc
 </string>
           </argument>
         </arguments>
@@ -88,7 +117,16 @@ view_xview[0]=0
             <string>//keyboard input
 //h_key=keyboard_check(ord("D"))-keyboard_check(ord("A"))
 j_key=keyboard_check_pressed(ord("Z"))
+d_key=keyboard_check_pressed(ord("X"))
 
+
+//dashing
+if d_key and !dashing{
+    dashing=true
+    alarm[1]=dashTime
+    accSp=0
+    vsp=0
+}
 
 
 //speed
@@ -100,6 +138,8 @@ if place_meeting(x,y+accSp,obj_collision){
     if j_key{
         vsp=-jumpSp
         audio_play_sound(snd_jump,0,false)
+        dashing=false
+        accSp=permAcc
     }
 }
 else{
