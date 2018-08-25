@@ -30,12 +30,6 @@ jumpSp=4
 permAcc=0.2
 accSp=permAcc
 maxFallSp=4
-if room==rm_game{
-    hsp=walkSp
-}
-else{
-    hsp=0
-}
 vsp=0
 
 cameraDis=112
@@ -45,6 +39,15 @@ view_xview[0]=0
 dashing=false
 
 dashTime=room_speed*0.5
+
+dashSp=4
+
+if room==rm_game{
+    hsp=walkSp
+}
+else{
+    hsp=0
+}
 </string>
           </argument>
         </arguments>
@@ -69,6 +72,12 @@ dashTime=room_speed*0.5
             <kind>1</kind>
             <string>dashing=false
 accSp=permAcc
+if room==rm_game{
+    hsp=walkSp
+}
+else if room==rm_menu{
+    hsp=0
+}
 </string>
           </argument>
         </arguments>
@@ -126,12 +135,13 @@ if d_key and !dashing{
     alarm[1]=dashTime
     accSp=0
     vsp=0
+    hsp=dashSp
 }
 
 
 //speed
 vsp+=accSp
-if place_meeting(x,y+accSp,obj_collision){
+if place_meeting(x,y+permAcc,obj_collision){
     if !audio_is_playing(snd_footsteps) and hsp!=0{
         audio_play_sound(snd_footsteps,0,false)
     }
@@ -140,27 +150,28 @@ if place_meeting(x,y+accSp,obj_collision){
         audio_play_sound(snd_jump,0,false)
         dashing=false
         accSp=permAcc
+        alarm[1]=-1
+        hsp=walkSp
     }
 }
-else{
-    if audio_is_playing(snd_footsteps){
-        audio_stop_sound(snd_footsteps)
-    }
-}   
+
 if vsp&gt;maxFallSp{
     vsp=maxFallSp
 }
 
-if room==rm_game{
+if dashing{
+    hsp=dashSp
+}
+else if room==rm_game{
     hsp=walkSp
 }
-else{
+if room==rm_menu and !dashing{
     hsp=0
 }
 
 //movement/collisions
-hInc=(accSp*sign(hsp))
-vInc=(accSp*sign(vsp))
+hInc=(permAcc*sign(hsp))
+vInc=(permAcc*sign(vsp))
 absH=abs(hsp)
 absV=abs(vsp)
 spMax=max(absH,absV)
@@ -172,7 +183,7 @@ if absH&gt;absV{
 if absV&gt;absH{
     hInc=(absH/absV)*hInc
 }
-for(var i=0;i&lt;spMax;i+=accSp){
+for(var i=0;i&lt;spMax;i+=permAcc){
     if !place_meeting(x+hInc,y,obj_collision){
         x+=hInc
     }
@@ -186,6 +197,13 @@ for(var i=0;i&lt;spMax;i+=accSp){
         vsp=0
     }
 }
+
+if !place_meeting(x,y+permAcc,obj_collision) or hsp==0{
+    if audio_is_playing(snd_footsteps){
+        audio_stop_sound(snd_footsteps)
+    }
+} 
+
 floorX=floor(x)
 floorY=floor(y)
 
