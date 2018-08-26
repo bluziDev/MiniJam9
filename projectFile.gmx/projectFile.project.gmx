@@ -12,6 +12,8 @@
     <sounds name="effects">
       <sound>sound\snd_jump</sound>
       <sound>sound\snd_footsteps</sound>
+      <sound>sound\snd_dash</sound>
+      <sound>sound\snd_hurt</sound>
     </sounds>
   </sounds>
   <sprites name="sprites">
@@ -24,8 +26,13 @@
     <sprite>sprites\spr_goal</sprite>
     <sprite>sprites\spr_playerRun</sprite>
     <sprite>sprites\spr_playerAir</sprite>
+    <sprite>sprites\spr_playerDash</sprite>
+    <sprite>sprites\spr_</sprite>
+    <sprite>sprites\spr_homework</sprite>
   </sprites>
-  <backgrounds name="background"/>
+  <backgrounds name="background">
+    <background>background\bg_red</background>
+  </backgrounds>
   <paths name="paths"/>
   <objects name="objects">
     <object>objects\obj_player</object>
@@ -35,6 +42,7 @@
     <object>objects\obj_play</object>
     <object>objects\obj_spikeball</object>
     <object>objects\obj_goal</object>
+    <object>objects\obj_homework</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>

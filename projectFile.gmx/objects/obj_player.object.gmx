@@ -25,14 +25,16 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>walkSp=2
-jumpSp=3
-permAcc=0.2
+            <string>walkSp=1
+jumpSp=2
+permAcc=0.1
 accSp=permAcc
 maxFallSp=4
 vsp=0
 
-cameraDis=56
+
+
+cameraDis=28
 
 view_xview[0]=0
 
@@ -40,7 +42,7 @@ dashing=false
 
 dashTime=room_speed*0.25
 
-dashSp=3
+dashSp=2
 
 if room==rm_game{
     hsp=walkSp
@@ -48,6 +50,39 @@ if room==rm_game{
 else{
     hsp=0
 }
+
+image_speed=0.2
+
+depth=1
+
+started=false
+
+playTime=30
+
+hurt=false
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>room_restart()
 </string>
           </argument>
         </arguments>
@@ -136,6 +171,7 @@ if d_key and !dashing{
     accSp=0
     vsp=0
     hsp=dashSp
+    audio_play_sound(snd_dash,0,false)
 }
 
 
@@ -167,6 +203,21 @@ else if room==rm_game{
 }
 if room==rm_menu and !dashing{
     hsp=0
+}
+
+if dashing{
+    sprite_index=spr_playerDash
+}
+else if !place_meeting(x,y+permAcc,obj_collision){
+    sprite_index=spr_playerAir
+}
+else if hsp!=0{
+    if sprite_index!=spr_playerRun{
+        sprite_index=spr_playerRun
+    }
+}
+else{
+    sprite_index=spr_playerIdle
 }
 
 //movement/collisions
@@ -211,15 +262,18 @@ if room==rm_game and x&gt;cameraDis{
     view_xview[0]=floorX-cameraDis
 }
 
-if place_meeting(floorX,floorY,obj_play){
-    alarm[0]=room_speed*0.5
+if place_meeting(floorX,floorY,obj_play) and !started{
+    alarm[0]=playTime
     with obj_play{
         instance_destroy()
     }
+    started=true
 }
 
-if place_meeting(floorX,floorY,obj_spikeball) or floorY&gt;=room_height{
-    room_restart()
+if (place_meeting(floorX,floorY,obj_spikeball) or floorY&gt;=room_height) and !hurt{
+    alarm[2]=30
+    audio_play_sound(snd_hurt,0,false)
+    hurt=true
 }   
 
 if place_meeting(floorX,floorY,obj_goal){
@@ -248,7 +302,15 @@ if place_meeting(floorX,floorY,obj_goal){
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_sprite(sprite_index,0,floorX,floorY)
+            <string>if !hurt{
+    draw_sprite(sprite_index,image_index,floorX,floorY)
+}
+if started{
+    draw_set_alpha((playTime-alarm[0])/playTime)
+    draw_set_color(c_black)
+    draw_rectangle(0,0,room_width,room_height,false)
+    draw_set_alpha(1)
+}
 </string>
           </argument>
         </arguments>
