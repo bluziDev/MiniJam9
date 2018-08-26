@@ -22,6 +22,7 @@
     <sprite>sprites\spr_play</sprite>
     <sprite>sprites\spr_spikeball</sprite>
     <sprite>sprites\spr_goal</sprite>
+    <sprite>sprites\spr_playerRun</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
