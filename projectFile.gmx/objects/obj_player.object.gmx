@@ -135,7 +135,12 @@ else if room==rm_menu{
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>room_goto(rm_game)
+            <string>if room==rm_menu{
+    room_goto(rm_game)
+}
+if room==rm_game{
+    game_restart()
+}
 </string>
           </argument>
         </arguments>
@@ -270,14 +275,18 @@ if place_meeting(floorX,floorY,obj_play) and !started{
     started=true
 }
 
-if (place_meeting(floorX,floorY,obj_spikeball) or floorY&gt;=room_height) and !hurt{
+if (place_meeting(floorX,floorY,obj_spikeball) or floorY&gt;=room_height) and !hurt and !started{
     alarm[2]=30
     audio_play_sound(snd_hurt,0,false)
     hurt=true
 }   
 
 if place_meeting(floorX,floorY,obj_goal){
-    game_restart()
+    alarm[0]=playTime
+    with obj_goal{
+        instance_destroy()
+    }
+    started=true
 } 
 
 </string>
